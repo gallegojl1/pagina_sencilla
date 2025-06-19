@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-    }
+    
         stage('Deploy to Remote Server') {
             steps {
                 sshagent (credentials: ['remote-server-ssh']) {
@@ -37,7 +37,7 @@ pipeline {
                 }
             }
         }
-
+   }
     post {
         success {
             echo '✅ Página web desplegada correctamente. Visita http://localhost:8081'
