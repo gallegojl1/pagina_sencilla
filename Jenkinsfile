@@ -5,6 +5,9 @@ pipeline {
         IMAGE_NAME = 'gallegojl1/mi-web2'
         TAG = 'latest'
         DOCKERHUB_CREDENTIALS = credentials('joseluis-dockerhub')  // Reemplaza con tu ID de credencial
+        REMOTE_HOST = '217.160.88.215' // ⚠️ Cambia esto por la IP real de tu servidor
+        REMOTE_USER = 'root'        // ⚠️ Cambia esto por el usuario SSH de tu servidor
+        REMOTE_PORT = '22'
     }
 
     stages {
@@ -38,6 +41,19 @@ pipeline {
             }
         }
     }
+        stage('Deploy to Remote Server') {
+            steps {
+                sshagent (credentials: ['remote-server-ssh']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT '
+                            docker pull $IMAGE_NAME:$TAG &&
+                            docker rm -f mi-web || true &&
+                            docker run -d -p 8080:80 --name mi-web $IMAGE_NAME:$TAG
+                        '
+                    """
+                }
+            }
+        }
 
     post {
         success {
