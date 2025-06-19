@@ -23,23 +23,6 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'joseluis-dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh '''
-                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-                        docker push $IMAGE_NAME:$TAG
-                    '''
-                }
-            }
-        }
-
-        stage('Run Container Locally') {
-            steps {
-                sh 'docker rm -f mi-web2 || true'
-                sh 'docker run -d -p 8081:80 --name mi-web $IMAGE_NAME:$TAG'
-            }
-        }
     }
         stage('Deploy to Remote Server') {
             steps {
