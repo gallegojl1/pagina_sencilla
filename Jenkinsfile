@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'gallegojl1/mi-web'
+        IMAGE_NAME = 'gallegojl1/mi-web2'
         TAG = 'latest'
         DOCKERHUB_CREDENTIALS = credentials('joseluis-dockerhub')  // Reemplaza con tu ID de credencial
     }
@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/gallegojl1/mi-web.git', branch: 'main'
+                git url: 'https://github.com/gallegojl1/pagina_sencilla.git', branch: 'main'
             }
         }
 
@@ -33,15 +33,15 @@ pipeline {
 
         stage('Run Container Locally') {
             steps {
-                sh 'docker rm -f mi-web || true'
-                sh 'docker run -d -p 8080:80 --name mi-web $IMAGE_NAME:$TAG'
+                sh 'docker rm -f mi-web2 || true'
+                sh 'docker run -d -p 8081:80 --name mi-web $IMAGE_NAME:$TAG'
             }
         }
     }
 
     post {
         success {
-            echo '✅ Página web desplegada correctamente. Visita http://localhost:8080'
+            echo '✅ Página web desplegada correctamente. Visita http://localhost:8081'
         }
         failure {
             echo '❌ Falló el proceso.'
