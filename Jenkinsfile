@@ -49,6 +49,7 @@ pipeline {
                         # Si el contenedor existe, lo eliminamos
                         if docker ps -a --format "{{.Names}}" | grep -Eq "^mi-web\$"; then
                             echo "🧹 Eliminando contenedor existente..."
+                            docker stop mi-web
                             docker rm -f mi-web
                         fi
 
