@@ -22,7 +22,22 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME:$TAG .'
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME:$TAG .'
+            }
+        }
 
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'joseluis-dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $IMAGE_NAME:$TAG
+                    '''
+                }
+            }
+        }
     
         stage('Deploy to Remote Server') {
             steps {
