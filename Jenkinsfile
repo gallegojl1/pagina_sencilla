@@ -44,6 +44,7 @@ pipeline {
                 sshagent (credentials: ['remote-server-ssh']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT '
+                            echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin &&
                             docker pull $IMAGE_NAME:$TAG &&
                             docker rm -f mi-web || true &&
                             docker run -d -p 8080:80 --name mi-web $IMAGE_NAME:$TAG
