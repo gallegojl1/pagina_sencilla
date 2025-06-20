@@ -22,7 +22,7 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME:$TAG .'
             }
         }
-        stage('Build Docker Image') {
+        stage('Build Docker Image2') {
             steps {
                 sh 'docker build -t $IMAGE_NAME:$TAG .'
             }
