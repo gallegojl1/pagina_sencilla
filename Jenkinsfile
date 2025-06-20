@@ -39,7 +39,6 @@ pipeline {
             }
         }
     
-    stage('Deploy to Remote Server') {
         stage('Deploy to Remote Server') {
             steps {
                 sshagent (credentials: ['remote-server-ssh']) {
@@ -47,18 +46,13 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT '
                             echo \$DOCKER_PASS | docker login -u \$DOCKER_USER --password-stdin &&     // con esto se logea en dockerhub antes de descargare la imagen; el token de de dockerhub lo he dado de alta en jenkins
                             docker pull $IMAGE_NAME:$TAG &&
-                        # Si el contenedor existe, lo eliminamos
-                        if docker ps -a --format "{{.Names}}" | grep -Eq "^mi-web\$"; then
-                            echo "🧹 Eliminando contenedor existente..."
-                            docker rm -f mi-web
-                        fi
+                            docker rm -f mi-web || true &&
                             docker run -d -p 8080:80 --name mi-web $IMAGE_NAME:$TAG
                         '
                     """
                 }
             }
         }
-}
    }
     post {
         success {
