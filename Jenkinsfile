@@ -17,7 +17,7 @@ pipeline {
 
         stage('Deploy to Remote Server') {
             steps {
-                sshagent (credentials: ['remote-server-ssh']) {
+                sshagent (credentials: ['servidor-remoto']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no -p $REMOTE_PORT $REMOTE_USER@$REMOTE_HOST '
                             # Crear carpeta si no existe
